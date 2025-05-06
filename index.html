@@ -1,64 +1,357 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <title>Firebase Auth</title>
+    <title>Tezkor Quiz - Kirish/Ro'yxatdan o'tish</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f8961e;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 80px;
+        }
+        
+        .auth-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .auth-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-sidebar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .auth-form {
+            padding: 40px;
+        }
+        
+        .auth-title {
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-auth {
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+        }
+        
+        .auth-switch a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .social-login {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .google {
+            background-color: #DB4437;
+        }
+        
+        .facebook {
+            background-color: #4267B2;
+        }
+        
+        .telegram {
+            background-color: #0088cc;
+        }
+    </style>
 </head>
 <body>
-  <h2>Ro‘yxatdan o‘tish</h2>
-  <input type="email" id="signupEmail" placeholder="Email">
-  <input type="password" id="signupPassword" placeholder="Parol">
-  <button onclick="signup()">Ro‘yxatdan o‘tish</button>
 
-  <h2>Kirish</h2>
-  <input type="email" id="loginEmail" placeholder="Email">
-  <input type="password" id="loginPassword" placeholder="Parol">
-  <button onclick="login()">Kirish</button>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">Tezkor Quiz</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Bosh sahifa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="test-boshqaruv-tizimi.html">Segment</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="faylyuklash.html">Fayllarni Saqlash</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="yordam.html">Yordam</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+<div class="container auth-container my-5">
+    <div class="row auth-card">
+        <!-- Auth Sidebar -->
+        <div class="col-md-5 auth-sidebar">
+            <h2 class="mb-4">Tezkor Quiz</h2>
+            <p class="mb-4">O'z hisobingizni yaratib, testlarni saqlang, natijalaringizni kuzating va ko'proq imkoniyatlardan foydalaning.</p>
+            <div>
+                <h5 class="mb-3">Hisobingiz orqali:</h5>
+                <ul class="ps-3">
+                    <li class="mb-2">Testlarni saqlash va keyinroq davom ettirish</li>
+                    <li class="mb-2">O'z natijalaringiz tarixini ko'rish</li>
+                    <li class="mb-2">Sevimli testlarni belgilash</li>
+                    <li class="mb-2">Shaxsiy test to'plamlarini yaratish</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Auth Forms -->
+        <div class="col-md-7 auth-form">
+            <!-- Login Form (default visible) -->
+            <div id="loginForm">
+                <h2 class="auth-title">Hisobingizga kirish</h2>
+                
+                <form id="formLogin">
+                    <div class="mb-3">
+                        <label for="loginEmail" class="form-label">Email manzil</label>
+                        <input type="email" class="form-control" id="loginEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Parol</label>
+                        <input type="password" class="form-control" id="loginPassword" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Meni eslab qol</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-auth">Kirish</button>
+                </form>
+                
+                <div class="social-login">
+                    <a href="#" class="social-btn google"><i class="fab fa-google"></i></a>
+                    <a href="#" class="social-btn facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-btn telegram"><i class="fab fa-telegram"></i></a>
+                </div>
+                
+                <div class="auth-switch">
+                    Hisobingiz yo'qmi? <a href="#" id="showRegister">Ro'yxatdan o'tish</a>
+                </div>
+            </div>
+            
+            <!-- Register Form (initially hidden) -->
+            <div id="registerForm" style="display: none;">
+                <h2 class="auth-title">Ro'yxatdan o'tish</h2>
+                
+                <form id="formRegister">
+                    <div class="mb-3">
+                        <label for="registerName" class="form-label">To'liq ism</label>
+                        <input type="text" class="form-control" id="registerName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerEmail" class="form-label">Email manzil</label>
+                        <input type="email" class="form-control" id="registerEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPassword" class="form-label">Parol</label>
+                        <input type="password" class="form-control" id="registerPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerConfirmPassword" class="form-label">Parolni tasdiqlang</label>
+                        <input type="password" class="form-control" id="registerConfirmPassword" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="termsAgree" required>
+                        <label class="form-check-label" for="termsAgree">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Foydalanish shartlari</a>ga roziman
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-auth">Ro'yxatdan o'tish</button>
+                </form>
+                
+                <div class="auth-switch">
+                    Allaqachon hisobingiz bormi? <a href="#" id="showLogin">Kirish</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDptTCpFN-zgcB9E6YCe_gxDVp8_wV7JMY",
-      authDomain: "tezkorloginparol.firebaseapp.com",
-      projectId: "tezkorloginparol",
-      storageBucket: "tezkorloginparol.firebasestorage.app",
-      messagingSenderId: "524376403725",
-      appId: "1:524376403725:web:2ffa58276df6cf18860a44",
-      measurementId: "G-G11WZ9CJQ4"
-    };
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Foydalanish shartlari</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5>Tezkor Quiz xizmatidan foydalanish shartlari</h5>
+                <p>Ushbu foydalanish shartlari Tezkor Quiz xizmatidan foydalanish qoidalarini belgilaydi.</p>
+                <p>Tezkor Quiz xizmatidan foydalanish orqali siz ushbu shartlarga rozilik bildirasiz.</p>
+                <!-- Foydalanish shartlarini to'liq matni -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Toggle between login and register forms
+    document.getElementById('showRegister').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+    });
+    
+    document.getElementById('showLogin').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+    });
+    
+    // Form submission handlers
+    document.getElementById('formLogin').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Demo: Get form data 
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        const remember = document.getElementById('rememberMe').checked;
+        
+        console.log('Login attempt:', {email, password, remember});
+        
+        // Here you would typically:
+        // 1. Send data to your backend API
+        // 2. Validate credentials
+        // 3. Store user tokens in localStorage/sessionStorage
+        // 4. Redirect to dashboard
+        
+        // Demo: Simple simulation
+        alert('Muvaffaqiyatli kirish!');
+        localStorage.setItem('userLoggedIn', 'true');
+        localStorage.setItem('userEmail', email);
+        window.location.href = 'dashboard.html';
+    });
+    
+    document.getElementById('formRegister').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Demo: Get form data
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirmPassword = document.getElementById('registerConfirmPassword').value;
+        
+        // Simple validation
+        if (password !== confirmPassword) {
+            alert('Parollar mos kelmadi');
+            return;
+        }
+        
+        console.log('Registration attempt:', {name, email, password});
+        
+        // Here you would typically:
+        // 1. Send data to your backend API
+        // 2. Create user account
+        // 3. Store user tokens
+        // 4. Redirect to dashboard
+        
+        // Demo: Simple simulation
+        alert('Ro\'yxatdan muvaffaqiyatli o\'tdingiz!');
+        localStorage.setItem('userLoggedIn', 'true');
+        localStorage.setItem('userName', name);
+        localStorage.setItem('userEmail', email);
+        window.location.href = 'dashboard.html';
+    });
+</script>
 
-    // Ro‘yxatdan o‘tish
-    window.signup = function () {
-      const email = document.getElementById('signupEmail').value;
-      const password = document.getElementById('signupPassword').value;
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          alert("Muvaffaqiyatli ro'yxatdan o'tdingiz");
-          window.location.href = "home.html"; // yo'naltirish
-        })
-        .catch(error => {
-          alert("Xatolik: " + error.message);
-        });
-    }
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    // Kirish
-    window.login = function () {
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          alert("Tizimga muvaffaqiyatli kirdingiz!");
-          window.location.href = "home.html"; // yo'naltirish
-        })
-        .catch(error => {
-          alert("Kirishda xatolik: " + error.message);
-        });
-    }
-  </script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDptTCpFN-zgcB9E6YCe_gxDVp8_wV7JMY",
+    authDomain: "tezkorloginparol.firebaseapp.com",
+    projectId: "tezkorloginparol",
+    storageBucket: "tezkorloginparol.firebasestorage.app",
+    messagingSenderId: "524376403725",
+    appId: "1:524376403725:web:2ffa58276df6cf18860a44",
+    measurementId: "G-G11WZ9CJQ4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const loginForm = document.getElementById("loginForm");
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        alert("Kirish muvaffaqiyatli!");
+        window.location.href = "admin.html";
+      })
+      .catch((error) => {
+        alert("Xatolik: " + error.message);
+      });
+  });
+</script>
+
 </body>
 </html>
