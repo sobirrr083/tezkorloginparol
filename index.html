@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Firebase Auth</title>
+</head>
+<body>
+  <h2>Ro‘yxatdan o‘tish</h2>
+  <input type="email" id="signupEmail" placeholder="Email">
+  <input type="password" id="signupPassword" placeholder="Parol">
+  <button onclick="signup()">Ro‘yxatdan o‘tish</button>
+
+  <h2>Kirish</h2>
+  <input type="email" id="loginEmail" placeholder="Email">
+  <input type="password" id="loginPassword" placeholder="Parol">
+  <button onclick="login()">Kirish</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Ro‘yxatdan o‘tish
+    window.signup = function () {
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert("Muvaffaqiyatli ro'yxatdan o'tdingiz");
+          window.location.href = "home.html"; // yo'naltirish
+        })
+        .catch(error => {
+          alert("Xatolik: " + error.message);
+        });
+    }
+
+    // Kirish
+    window.login = function () {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert("Tizimga muvaffaqiyatli kirdingiz!");
+          window.location.href = "home.html"; // yo'naltirish
+        })
+        .catch(error => {
+          alert("Kirishda xatolik: " + error.message);
+        });
+    }
+  </script>
+</body>
+</html>
