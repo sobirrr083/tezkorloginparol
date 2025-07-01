@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tizimga kirish</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+        }
+
+        .form-tabs {
+            display: flex;
+            background: #f8f9fa;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            color: #2d79f3;
+            background: white;
+            border-bottom-color: #2d79f3;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 30px;
+            width: 100%;
+        }
+
+        .form.hidden {
+            display: none;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo h1 {
+            color: #2d79f3;
+            font-size: 24px;
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 2px solid #dadce0;
+            border-radius: 12px;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 500;
+            color: #3c4043;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .google-btn:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-color: #4285f4;
+            transform: translateY(-2px);
+        }
+
+        .google-btn:active {
+            transform: translateY(0);
+        }
+
+        .google-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .divider::before {
+            margin-right: 10px;
+        }
+
+        .divider::after {
+            margin-left: 10px;
+        }
+
+        .input-container {
+            border: 1.5px solid #ecedec;
+            border-radius: 10px;
+            padding: 10px;
+            transition: 0.2s ease-in-out;
+            margin-bottom: 5px;
+        }
+
+        .input-container:focus-within {
+            border: 1.5px solid #2d79f3;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .input {
+            flex: 1;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            outline: none;
+            background: transparent;
+        }
+
+        .password-toggle {
+            margin-left: 10px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: #2d79f3;
+        }
+
+        .flex-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            font-size: 14px;
+        }
+
+        .link {
+            color: #2d79f3;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .button-submit {
+            background-color: #2d79f3;
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .button-submit:hover {
+            background-color: #1a5dd1;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: fadeInOut 4s forwards;
+            display: none;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        }
+
+        .loading {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        .google-btn .loading {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #4285f4;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .strength-meter {
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+        }
+
+        .strength-weak {
+            background: #e74c3c;
+        }
+
+        .strength-medium {
+            background: #f39c12;
+        }
+
+        .strength-strong {
+            background: #27ae60;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            margin-top: 4px;
+            color: #666;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
+            .form-container {
+                border-radius: 15px;
+            }
+            
+            .tab-button {
+                padding: 15px;
+                font-size: 14px;
+            }
+            
+            .form {
+                padding: 20px;
+            }
+            
+            .logo h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-tabs">
+            <button class="tab-button active" onclick="switchTab('login')">Kirish</button>
+            <button class="tab-button" onclick="switchTab('signup')">Ro'yxatdan o'tish</button>
+        </div>
+
+        <!-- Kirish Formasi -->
+        <div id="loginForm" class="form">
+            <div class="logo">
+                <h1><i class="fas fa-lock"></i> Tizimga kirish</h1>
+            </div>
+
+            <button class="google-btn" id="loginGoogleBtn" onclick="signInWithGoogle('login')">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Google bilan kirish
+                <div class="loading" id="loginGoogleLoading"></div>
+            </button>
+
+            <div class="divider">yoki</div>
+            
+            <div class="input-container">
+                <div class="input-row">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" class="input" id="loginEmail" placeholder="Emailingizni kiriting" required>
+                </div>
+            </div>
+            <div class="error-message" id="loginEmailError"></div>
+
+            <div class="input-container">
+                <div class="input-row">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" class="input" id="loginPassword" placeholder="Parolingizni kiriting" required>
+                    <div class="password-toggle" onclick="togglePassword('loginPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="error-message" id="loginPasswordError"></div>
+
+            <div class="flex-row">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Meni eslab qol</label>
+                </div>
+                <a class="link" onclick="resetPassword()">Parolni unutdingizmi?</a>
+            </div>
+
+            <button class="button-submit" id="loginBtn" onclick="loginUser()">
+                <div class="loading" id="loginLoading"></div>
+                <span id="loginBtnText">Kirish</span>
+            </button>
+
+            <p style="text-align: center; margin-top: 20px; font-size: 14px;">
+                Hisobingiz yo'qmi? <a class="link" onclick="switchTab('signup')">Ro'yxatdan o'ting</a>
+            </p>
+        </div>
+
+        <!-- Ro'yxatdan o'tish Formasi -->
+        <div id="signupForm" class="form hidden">
+            <div class="logo">
+                <h1><i class="fas fa-user-plus"></i> Yangi hisob</h1>
+            </div>
+
+            <button class="google-btn" id="signupGoogleBtn" onclick="signInWithGoogle('signup')">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Google bilan ro'yxatdan o'tish
+                <div class="loading" id="signupGoogleLoading"></div>
+            </button>
+
+            <div class="divider">yoki</div>
+            
+            <div class="input-container">
+                <div class="input-row">
+                    <i class="fas fa-user"></i>
+                    <input type="text" class="input" id="signupName" placeholder="To'liq ismingizni kiriting" required>
+                </div>
+            </div>
+            <div class="error-message" id="signupNameError"></div>
+
+            <div class="input-container">
+                <div class="input-row">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" class="input" id="signupEmail" placeholder="Emailingizni kiriting" required>
+                </div>
+            </div>
+            <div class="error-message" id="signupEmailError"></div>
+
+            <div class="input-container">
+                <div class="input-row">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" class="input" id="signupPassword" placeholder="Parol yarating" required oninput="checkPasswordStrength(this.value)">
+                    <div class="password-toggle" onclick="togglePassword('signupPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+                <div class="strength-meter">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="strength-text" id="strengthText"></div>
+            </div>
+            <div class="error-message" id="signupPasswordError"></div>
+
+            <div class="input-container">
+                <div class="input-row">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" class="input" id="confirmPassword" placeholder="Parolni qayta kiriting" required>
+                    <div class="password-toggle" onclick="togglePassword('confirmPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="error-message" id="confirmPasswordError"></div>
+
+            <div class="flex-row">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="agreeTerms" required>
+                    <label for="agreeTerms">Shartlar va qoidalarga roziman</label>
+                </div>
+            </div>
+
+            <button class="button-submit" id="signupBtn" onclick="signupUser()">
+                <div class="loading" id="signupLoading"></div>
+                <span id="signupBtnText">Ro'yxatdan o'tish</span>
+            </button>
+
+            <p style="text-align: center; margin-top: 20px; font-size: 14px;">
+                Hisobingiz bormi? <a class="link" onclick="switchTab('login')">Kirish</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="success-message" id="successMessage"></div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getAuth, 
+            GoogleAuthProvider, 
+            signInWithPopup, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            sendPasswordResetEmail,
+            updateProfile
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // Firebase konfiguratsiyasi
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxIpLY5WasiSIlDL4japBLnnXRwOLUKEQ",
+            authDomain: "tezkor-quiz-bbe3c.firebaseapp.com",
+            projectId: "tezkor-quiz-bbe3c",
+            storageBucket: "tezkor-quiz-bbe3c.firebasestorage.app",
+            messagingSenderId: "143161522496",
+            appId: "1:143161522496:web:252108ace3a4c19f35e2a5"
+        };
+
+        // Firebase ni ishga tushirish
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Tab almashtirish funksiyasi
+        function switchTab(tabName) {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            if (tabName === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                tabButtons[0].classList.add('active');
+                clearErrors();
+            } else if (tabName === 'signup') {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                tabButtons[1].classList.add('active');
+                clearErrors();
+            }
+        }
+
+        // Parolni ko'rsatish/yashirish funksiyasi
+        function togglePassword(passwordId, toggleElement) {
+            const passwordInput = document.getElementById(passwordId);
+            const isPassword = passwordInput.type === 'password';
+            
+            passwordInput.type = isPassword ? 'text' : 'password';
+            toggleElement.innerHTML = isPassword ? 
+                '<i class="fas fa-eye-slash"></i>' : 
+                '<i class="fas fa-eye"></i>';
+        }
+
+        // Parol kuchini tekshirish
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            
+            let strength = 0;
+            let feedback = '';
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            const strengthPercent = (strength / 5) * 100;
+            strengthBar.style.width = strengthPercent + '%';
+            
+            if (strength < 2) {
+                strengthBar.className = 'strength-bar strength-weak';
+                feedback = 'Zaif parol';
+            } else if (strength < 4) {
+                strengthBar.className = 'strength-bar strength-medium';
+                feedback = "O'rtacha parol";
+            } else {
+                strengthBar.className = 'strength-bar strength-strong';
+                feedback = 'Kuchli parol';
+            }
+            
+            strengthText.textContent = feedback;
+        }
+
+        // Emailni tekshirish
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Xatolikni ko'rsatish
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+        }
+
+        // Xatolikni yashirish
+        function hideError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            if (errorElement) {
+                errorElement.style.display = 'none';
+            }
+        }
+
+        // Barcha xatoliklarni tozalash
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(element => {
+                element.style.display = 'none';
+            });
+        }
+
+        // Yuklanish holatini ko'rsatish
+        function showLoading(buttonId) {
+            const button = document.getElementById(buttonId);
+            const loading = button.querySelector('.loading');
+            const text = button.querySelector('span') || button;
+            
+            loading.style.display = 'inline-block';
+            text.textContent = 'Yuklanmoqda...';
+            button.disabled = true;
+            button.style.opacity = '0.6';
+        }
+
+        // Yuklanish holatini yashirish
+        function hideLoading(buttonId, originalText) {
+            const button = document.getElementById(buttonId);
+            const loading = button.querySelector('.loading');
+            const text = button.querySelector('span') || button;
+            
+            loading.style.display = 'none';
+            text.textContent = originalText;
+            button.disabled = false;
+            button.style.opacity = '1';
+        }
+
+        // Muvaffaqiyatli xabar
+        function showSuccessMessage(message) {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Foydalanuvchini kirish funksiyasi
+        async function loginUser() {
+            clearErrors();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            
+            let hasError = false;
+            
+            if (!email) {
+                showError('loginEmailError', 'Email kiriting');
+                hasError = true;
+            } else if (!validateEmail(email)) {
+                showError('loginEmailError', "Email noto'g'ri formatda");
+                hasError = true;
+            }
+            
+            if (!password) {
+                showError('loginPasswordError', 'Parol kiriting');
+                hasError = true;
+            } else if (password.length < 6) {
+                showError('loginPasswordError', 'Parol kamida 6 ta belgidan iborat bo\'lishi kerak');
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            showLoading('loginBtn');
+            
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                if (rememberMe) {
+                    localStorage.setItem('rememberedUser', JSON.stringify({
+                        email: user.email
+                    }));
+                } else {
+                    localStorage.removeItem('rememberedUser');
+                }
+                
+                showSuccessMessage('Muvaffaqiyatli kirdingiz!');
+                
+                setTimeout(() => {
+                    window.location.href = '/dashboard.html';
+                }, 2000);
+            } catch (error) {
+                hideLoading('loginBtn', 'Kirish');
+                
+                let errorMessage = 'Xatolik yuz berdi, qayta urinib ko\'ring';
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'Bunday email bilan foydalanuvchi topilmadi';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Parol noto\'g\'ri';
+                }
+                showError('loginEmailError', errorMessage);
+            }
+        }
+
+        // Foydalanuvchini ro'yxatdan o'tkazish
+        async function signupUser() {
+            clearErrors();
+            
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            
+            let hasError = false;
+            
+            if (!name) {
+                showError('signupNameError', 'To\'liq ism kiriting');
+                hasError = true;
+            } else if (name.length < 2) {
+                showError('signupNameError', 'Ism kamida 2 ta belgidan iborat bo\'lishi kerak');
+                hasError = true;
+            }
+            
+            if (!email) {
+                showError('signupEmailError', 'Email kiriting');
+                hasError = true;
+            } else if (!validateEmail(email)) {
+                showError('signupEmailError', "Email noto'g'ri formatda");
+                hasError = true;
+            }
+            
+            if (!password) {
+                showError('signupPasswordError', 'Parol kiriting');
+                hasError = true;
+            } else if (password.length < 8) {
+                showError('signupPasswordError', 'Parol kamida 8 ta belgidan iborat bo\'lishi kerak');
+                hasError = true;
+            }
+            
+            if (!confirmPassword) {
+                showError('confirmPasswordError', 'Parolni tasdiqlang');
+                hasError = true;
+            } else if (password !== confirmPassword) {
+                showError('confirmPasswordError', 'Parollar mos kelmaydi');
+                hasError = true;
+            }
+            
+            if (!agreeTerms) {
+                showError('confirmPasswordError', 'Shartlarga rozilik bildiring');
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            showLoading('signupBtn');
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                await updateProfile(user, {
+                    displayName: name
+                });
+                
+                showSuccessMessage('Muvaffaqiyatli ro\'yxatdan o\'tdingiz!');
+                
+                document.getElementById('signupName').value = '';
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                document.getElementById('agreeTerms').checked = false;
+                
+                document.getElementById('strengthBar').style.width = '0%';
+                document.getElementById('strengthText').textContent = '';
+                
+                setTimeout(() => {
+                    switchTab('login');
+                    document.getElementById('loginEmail').value = email;
+                }, 2000);
+                
+            } catch (error) {
+                hideLoading('signupBtn', 'Ro\'yxatdan o\'tish');
+                
+                let errorMessage = 'Xatolik yuz berdi, qayta urinib ko\'ring';
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'Bu email bilan foydalanuvchi allaqachon mavjud';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Parol yetarlicha kuchli emas';
+                }
+                showError('signupEmailError', errorMessage);
+            }
+        }
+
+        // Parolni tiklash funksiyasi
+        function resetPassword() {
+            const email = document.getElementById('loginEmail').value.trim();
+            
+            if (!email) {
+                showError('loginEmailError', 'Parolni tiklash uchun avval emailingizni kiriting');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showError('loginEmailError', "Email noto'g'ri formatda");
+                return;
+            }
+            
+            sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    showSuccessMessage('Parolni tiklash uchun link emailingizga yuborildi');
+                })
+                .catch((error) => {
+                    let errorMessage = 'Xatolik yuz berdi, qayta urinib ko\'ring';
+                    if (error.code === 'auth/user-not-found') {
+                        errorMessage = 'Bunday email bilan foydalanuvchi topilmadi';
+                    }
+                    showError('loginEmailError', errorMessage);
+                });
+        }
+
+        // Google orqali kirish funksiyasi
+        async function signInWithGoogle(formType) {
+            const buttonId = formType === 'login' ? 'loginGoogleBtn' : 'signupGoogleBtn';
+            const originalText = formType === 'login' ? 'Google bilan kirish' : 'Google bilan ro\'yxatdan o\'tish';
+            const errorElementId = formType === 'login' ? 'loginEmailError' : 'signupEmailError';
+            
+            try {
+                showLoading(buttonId);
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                const displayName = user.displayName || 'Foydalanuvchi';
+                
+                showSuccessMessage(`Xush kelibsiz, ${displayName}!`);
+                
+                setTimeout(() => {
+                    window.location.href = '/dashboard.html';
+                }, 2000);
+            } catch (error) {
+                hideLoading(buttonId, originalText);
+                
+                let errorMessage = 'Google orqali kirishda xatolik yuz berdi';
+                switch (error.code) {
+                    case 'auth/popup-closed-by-user':
+                        errorMessage = 'Google oynasi yopildi. Qayta urinib ko\'ring';
+                        break;
+                    case 'auth/popup-blocked':
+                        errorMessage = 'Popup bloklangan. Brauzer sozlamalarini tekshiring';
+                        break;
+                    case 'auth/cancelled-popup-request':
+                        errorMessage = 'Kirish bekor qilindi';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'Internet aloqasini tekshiring';
+                        break;
+                    case 'auth/account-exists-with-different-credential':
+                        errorMessage = 'Bu email bilan allaqachon hisob mavjud. Boshqa usul bilan kirib ko\'ring';
+                        break;
+                }
+                
+                showError(errorElementId, errorMessage);
+            }
+        }
+
+        // Sahifa yuklanganda
+        document.addEventListener('DOMContentLoaded', function() {
+            const rememberedUser = localStorage.getItem('rememberedUser');
+            if (rememberedUser) {
+                const user = JSON.parse(rememberedUser);
+                document.getElementById('loginEmail').value = user.email;
+                document.getElementById('rememberMe').checked = true;
+            }
+            
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const activeForm = document.querySelector('.form:not(.hidden)');
+                    if (activeForm) {
+                        if (activeForm.id === 'loginForm') {
+                            loginUser();
+                        } else if (activeForm.id === 'signupForm') {
+                            signupUser();
+                        }
+                    }
+                }
+            });
+        });
+
+        document.addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
